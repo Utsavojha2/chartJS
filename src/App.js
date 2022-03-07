@@ -20,7 +20,9 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Leaasd
+          Hello
+          {' '}
+          {process.env.REACT_APP_NAME}
         </a>
       </header>
     </div>
