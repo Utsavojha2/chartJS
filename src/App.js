@@ -1,30 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useIsFetching } from 'react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Header/Header';
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import CoinDetail from './pages/CoinDetail';
+import CoinSummary from './pages/CoinSummary';
+import 'react-dropdown/style.css';
 
 function App() {
+  const isFetching = useIsFetching();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Hello
-          {' '}
-          {process.env.REACT_APP_NAME}
-        </a>
-      </header>
+    <div className="container container-app">
+      <BrowserRouter>
+        {isFetching ? <LoadingSpinner /> : null}
+        <Header />
+        <Routes>
+          <Route path="/" element={<CoinSummary />} />
+          <Route path="/coin/:id/:currency" element={<CoinDetail />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
