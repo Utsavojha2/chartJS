@@ -3,7 +3,8 @@ services:
   chartjs-app:
     stdin_open: true
     tty: true
-    build: .
+    build:
+      context: .
     ports:
       - '3000:3000'
     volumes:
