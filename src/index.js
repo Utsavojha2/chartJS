@@ -5,7 +5,7 @@ import App from './App';
 import { WatchListContextProvider } from './context/watchList.context';
 import './index.css';
 
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <WatchListContextProvider>
@@ -13,5 +13,5 @@ ReactDOM.render(
       <App />
     </QueryClientProvider>
   </WatchListContextProvider>,
-  document.getElementById('root')
+  document.getElementById('root') 
 );

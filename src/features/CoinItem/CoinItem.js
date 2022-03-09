@@ -1,34 +1,39 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { WatchListContext } from '../context/watchList.context';
+import { WatchListContext } from '../../context/watchList.context';
 
 const CoinItem = ({
   id,
   image,
   current_price,
   name,
-  price_change_percentage_24h: price_change
+  price_change_percentage_24h: price_change,
+  idx
 }) => {
   const navigate = useNavigate();
-  const {
-    deleteCoinListItem,
-    watchList: { currency }
-  } = useContext(WatchListContext);
+  const { deleteCoinListItem, watchList } = useContext(WatchListContext) || {};
 
   const onCoinItemClick = (e) => {
     if (e.target.classList.contains('delete-icon')) {
-      deleteCoinListItem(id);
-      return;
+      if (id === 'bitcoin') return;
+      return deleteCoinListItem(id);
     }
-    navigate(`/coin/${id}/${currency || 'usd'}`);
+    navigate(`/coin/${id}/${watchList?.currency || 'usd'}`);
   };
 
   return (
-    <div className="text-decoration-none my-1 coin" onClick={onCoinItemClick}>
+    <div
+      data-testid={`coin-item-${idx}`}
+      className="text-decoration-none my-1 coin"
+      onClick={onCoinItemClick}
+    >
       <li className="coinlist-item list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark">
-        <img className="coinlist-image" src={image} alt={name} />
+        <p className="px-0 py-0 mx-0 my-0">
+          <img className="coinlist-image" src={image} alt={name} />
+          <span className="ml-5">{name}</span>
+        </p>
         <span className="text-decoration-none">
-          {current_price} {'  '} {currency.toUpperCase()}
+          {current_price} {'  '} {watchList?.currency.toUpperCase()}
         </span>
         <span
           className={[
