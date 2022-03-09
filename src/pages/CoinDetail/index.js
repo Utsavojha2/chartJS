@@ -3,26 +3,18 @@ import { useQueries } from 'react-query';
 import { useParams } from 'react-router-dom';
 import HistoryChart from '../../features/HistoryChart';
 import CoinData from '../../features/CoinData';
-import useCoinDetail from '../../hooks/useCoinDetail';
 import { COIN_DETAIL_KEY } from '../../constants/crypto';
-import coinGecko from '../../api/coinGecko';
-
-const timeFrames = ['1', '7', '30'];
-
-const getCoinDetail = async (currency, coinId, timeFrame) => {
-  const { data } = await coinGecko.get(`/coins/${coinId}/market_chart/`, {
-    params: {
-      vs_currency: currency,
-      days: timeFrame
-    }
-  });
-  return data;
-};
+import useCoinsList from '../../hooks/useCoinsList';
+import {
+  timeFrames,
+  getCoinDetail,
+  transformCoinDetailData
+} from '../../helpers/config';
 
 const CoinDetail = () => {
   const { id, currency } = useParams();
 
-  const userQueries = useQueries(
+  const coinDetailTimeframesData = useQueries(
     timeFrames.map((frame) => {
       return {
         queryKey: [COIN_DETAIL_KEY, frame],
@@ -31,15 +23,21 @@ const CoinDetail = () => {
     })
   );
 
-  console.log(userQueries);
+  const { data: currentCoinDetail } = useCoinsList(currency, [id]);
+  const coinDetailTimeframes = transformCoinDetailData(
+    coinDetailTimeframesData.map((data) => data.data)
+  );
 
   const renderCryptoDetail = () => {
-    return userQueries.every((query) => !!query.isError) ? (
+    return coinDetailTimeframesData.every((query) => !!query.isError) ? (
       <h3 className="text-center text-light">Error fetching coin detail</h3>
     ) : (
       <div className="coinlist">
-        <HistoryChart />
-        <CoinData />
+        <HistoryChart
+          {...coinDetailTimeframes}
+          detail={currentCoinDetail?.[0]}
+        />
+        <CoinData data={currentCoinDetail?.[0]} />
       </div>
     );
   };

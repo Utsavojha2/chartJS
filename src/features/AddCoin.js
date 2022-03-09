@@ -13,8 +13,6 @@ const AddCoin = () => {
     (coin) => !watchList.list.includes(coin)
   );
 
-  console.log(AVAILABLE_COINS);
-
   return (
     <div className="add-coin-dropdown">
       <Dropdown
